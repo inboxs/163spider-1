@@ -109,9 +109,12 @@ class Music:
                 if str(content["data"][0]["code"]) == str(200):
                     self.parse_mp3(content,data)
             elif musicType == "lyric":
-                if bool(content["sgc"]):
+                if not bool(content["sgc"]):
                     return
-                self.parse_lyric(content,data)
+                if content:
+                    self.parse_lyric(content,data)
+                else:
+                    print("没有")
             else:
                 self.parse_comments(content,data, musicType)
         except:
@@ -173,7 +176,11 @@ class Music:
     # 解析歌词
     def parse_lyric(self,content,data):
         lyric = content["lrc"]["lyric"]
-        nickname = content["lyricUser"]["nickname"]
+        nickname = ""
+        try:
+            nickname = content["lyricUser"]["nickname"]
+        except:
+            pass
         s = lyric
         lyric= ""
         count = 1
@@ -190,3 +197,4 @@ class Music:
         logging.info(lyric_word["word"])
         logging.info("*" * 30 + "歌词" + "*" * 30)
 
+# Music().get_song_params(id=36025590, musicType="mp3")
